@@ -1,0 +1,71 @@
+<project name="HelloWorld" basedir="." default="all" xmlns:sonar="antlib:org.sonar.ant">
+
+<property name="project name" value="SonarQubeAnt" />
+
+<property name="src.dir"  value="src"/>
+<property name="build.dir" value="build"/>
+<property name="dist.dir" value="dist"/>
+
+
+<property name="sonar.host.url" value="http://localhost:9000" />
+<property name="sonar.projectKey" value="org.sonarqube:sonarqube-scanner-ant" />
+<property name="sonar.projectName" value="Example of SonarQube Scanner for Ant Usage" />
+<property name="sonar.projectVersion" value="1.0" />
+<property name="sonar.sources" value="src" />
+<property name="sonar.java.binaries" value="build" />
+<property name="sonar.java.libraries" value="dist/*.jar" />
+
+
+<target name="sonar">
+    <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
+        <!-- Update the following line, or put the "sonarqube-ant-task-*.jar" file in your "$HOME/.ant/lib" folder -->
+        <classpath path="C:\Users\User\Desktop\Project\lib\sonarqube-ant-task-2.5.jar" />
+    </taskdef>
+	    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="C:\Users\User\Desktop\Project\lib\jacocoant.jar"/>
+    </taskdef>
+	<sonar:sonar />
+	
+	</target>
+	
+	<target name="jacoco">
+	
+	<jacoco:coverage>
+    <java classname="org.jacoco.examples.HelloJaCoCo" fork="true">
+        <classpath>
+            <pathelement location="./bin"/>
+        </classpath>
+    </java>
+</jacoco:coverage>
+
+</target>
+
+
+<target name="init">
+<mkdir dir="${build.dir}"/>
+</target>
+
+
+ <target name="compile" depends="init">       
+ <javac srcdir="${src.dir}" destdir="${build.dir}"/>
+    </target>
+	
+	<target name="dist" depends="compile">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="com.sonarqubereport.sonarqube.ant"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="clean" description="claen up">
+        <delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		</target>
+		
+
+    <target name="all" depends="clean,compile,dist"/>
+
+</project>
+	
